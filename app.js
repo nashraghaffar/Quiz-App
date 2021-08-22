@@ -1,7 +1,20 @@
+// console.log(firebase.database())
+
 //writing questions
 
 var quizQues = [
-    {
+        {
+            num: 5,
+            ques: "Q5: Eugenics is the study of",
+            option: {
+                a: "a. altering human beings by changing their genetic components",
+                b: "b. people of European origin",
+                c: "c. different races of mankind",
+                d: "d. genetic of plants"
+            },
+            answer: "a. altering human beings by changing their genetic components"
+        },
+        {
         num: 1,
         ques: "Q1: HTML stands for ",
         option: {
@@ -49,31 +62,20 @@ var quizQues = [
             d: "d. Ultraviolet radiation"
         },
         answer: "d. Ultraviolet radiation"
-    },
+    }
 
-    {
-        num: 5,
-        ques: "Q5: Eugenics is the study of",
-        option: {
-            a: "a. altering human beings by changing their genetic components",
-            b: "b. people of European origin",
-            c: "c. different races of mankind",
-            d: "d. genetic of plants"
-        },
-        answer: "a. altering human beings by changing their genetic components"
-    },
-    
-   	
+   
 ]
 
 
 
+// FORM Validation
 
 
-
-
-
-
+var name = document.getElementById("name")
+var email = document.getElementById("email")
+var rollno = document.getElementById("rollno")
+var section = document.getElementById("section")
 
 //get start button
 var startBtn = document.getElementById('startBtn');
@@ -102,9 +104,15 @@ var question = document.getElementById('question');
 var options = document.getElementsByClassName('option')
 
 
+
+
 //Start Quiz Function
 
 function start() {
+    if(name.value=="" || section.value=="" || email.value=="" || rollno.value==""){
+        alert("Please fill the input field")
+        }
+else{       
     startTimer();
     var dispName=document.getElementById('dispName')
     var dispRoll=document.getElementById('dispRoll')
@@ -119,16 +127,41 @@ dispRoll.innerHTML +=getrollno.value;
     quizBox2.classList.remove("hide");
     next();
 }
+}
+
+
+
+// ==============================================================
+
+
+var getQuestion = document.getElementById("question");
+var getAnswer1 = document.getElementById("answer1");
+var getAnswer2 = document.getElementById("answer2");
+var getAnswer3 = document.getElementById("answer3");
+var getAnswer4 = document.getElementById("answer4");
+
+
+var quizQuestions;
+var questionId = 0;
+var score = 1;
+
+
 
 //Next Que Function
 var count = 0;
 
 function next() {
-    question.innerHTML = quizQues[count].ques
-    options[0].innerHTML = quizQues[count].option.a
-    options[1].innerHTML = quizQues[count].option.b
-    options[2].innerHTML = quizQues[count].option.c
-    options[3].innerHTML = quizQues[count].option.d
+
+    //getting ques from database
+    firebase.database().ref('Questions/'+count).on('value', function(questions){
+        quizQuestions = questions.val()
+        getQuestion.innerHTML = quizQuestions.que;
+        getAnswer1.innerText = quizQuestions.a;
+        getAnswer2.innerText = quizQuestions.b;
+        getAnswer3.innerText = quizQuestions.c;
+        getAnswer4.innerText = quizQuestions.d;
+    });
+
     
     for(var i=0;i<4;i++){
         options[i].classList.remove("disabled")
